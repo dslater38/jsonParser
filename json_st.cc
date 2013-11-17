@@ -284,6 +284,16 @@ vector<Value>::const_iterator Array::end() const
     return _array.end();
 }
 
+vector<Value>::iterator Array::begin()
+{
+    return _array.begin();
+}
+
+vector<Value>::iterator Array::end()
+{
+    return _array.end();
+}
+
 size_t Array::size() const
 {
     return _array.size();
