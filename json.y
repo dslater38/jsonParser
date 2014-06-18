@@ -81,6 +81,11 @@ string : DOUBLE_QUOTED_STRING {
         // Trim string
         std::string s($1);
         s = s.substr(1, s.length()-2);
+        while(true) {
+            auto n = s.find("\\\""); // searches \"
+            if (n == std::string::npos) break;
+            s.replace(n, 2, "\""); // replaces with "
+        }
         char* t = new char[s.length()+1];
         strcpy(t, s.c_str());
         $$ = t;
