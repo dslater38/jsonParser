@@ -10,9 +10,13 @@
     #include "json.tab.hh"
 %}
 
+ESCAPED_THING                           \\["]
+CHAR                                    [^"\\]|{ESCAPED_THING}
+STRING_DUBBLE                           \"{CHAR}*\"
+
 %%
 
-\"[^\"]*\"                              { yylval.string_v = yytext; return DOUBLE_QUOTED_STRING; }
+{STRING_DUBBLE}                         { yylval.string_v = yytext; return DOUBLE_QUOTED_STRING; }
 \'[^\']*\'                              { yylval.string_v = yytext; return SINGLE_QUOTED_STRING; }
 "["                                     { return SQUARE_BRACKET_L; }
 "]"                                     { return SQUARE_BRACKET_R; }
