@@ -26,6 +26,7 @@ if(BISON_FOUND)
 			--defines=${BISON_DEFINES}
 			--output=${BISON_OUTPUT}
 			${json_SOURCE_DIR}/json.y
+		DEPENDS ${json_SOURCE_DIR}/json.y
 		COMMENT "Generating json.tab.hh, json.tab.cc (parser)"
 	)
 endif(BISON_FOUND)
@@ -38,6 +39,7 @@ if(FLEX_FOUND)
 		COMMAND ${FLEX_EXECUTABLE}
 			--outfile=${FLEX_OUTPUT}
 			${json_SOURCE_DIR}/json.l
+		DEPENDS ${json_SOURCE_DIR}/json.l
 		COMMENT "Generating lex.yy.cc (lexer)"
 	)
 endif(FLEX_FOUND)
