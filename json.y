@@ -161,7 +161,7 @@ JSON::Value parse_string(const std::string& s)
     
     if (status)
     {
-        throw std::runtime_error("Error parsing file: JSON syntax.");
+        throw std::runtime_error("Error parsing string: JSON syntax.");
         delete parsd;
     }
     else
