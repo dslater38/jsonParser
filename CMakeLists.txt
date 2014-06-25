@@ -16,9 +16,9 @@ else()
 endif()
 
 find_package(BISON REQUIRED)
-set(BISON_OUTPUT ${json_SOURCE_DIR}/json.tab.cc)
-set(BISON_DEFINES ${json_SOURCE_DIR}/json.tab.hh)
-include_directories(${json_SOURCE_DIR})
+set(BISON_OUTPUT ${json_BINARY_DIR}/json.tab.cc)
+set(BISON_DEFINES ${json_BINARY_DIR}/json.tab.hh)
+include_directories(${json_SOURCE_DIR} ${json_BINARY_DIR})
 if(BISON_FOUND)
 	add_custom_command(
 		OUTPUT ${BISON_OUTPUT}
@@ -32,7 +32,7 @@ if(BISON_FOUND)
 endif(BISON_FOUND)
 
 find_package(FLEX REQUIRED)
-set(FLEX_OUTPUT ${json_SOURCE_DIR}/lex.yy.cc)
+set(FLEX_OUTPUT ${json_BINARY_DIR}/lex.yy.cc)
 if(FLEX_FOUND)
 	add_custom_command(
 		OUTPUT ${FLEX_OUTPUT}
