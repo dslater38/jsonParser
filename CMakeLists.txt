@@ -44,7 +44,7 @@ if(FLEX_FOUND)
 	)
 endif(FLEX_FOUND)
 
-add_library(json json_st.cc json.tab.cc lex.yy.cc)
+add_library(json json_st.cc ${BISON_OUTPUT} ${FLEX_OUTPUT})
 add_executable(test test.cc)
 target_link_libraries(test json) 
 
