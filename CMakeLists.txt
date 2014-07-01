@@ -49,4 +49,12 @@ add_executable(test test.cc)
 target_link_libraries(test json) 
 
 
+option(WITH_UNIT_TESTS "build unit tests, requires cppunit framework")
 
+if (WITH_UNIT_TESTS)
+	message(STATUS "Building with unit tests")
+	enable_testing()
+	add_test(json ut/ut.json)
+	include(CTest)
+	add_subdirectory(ut)
+endif(WITH_UNIT_TESTS)
