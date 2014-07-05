@@ -58,3 +58,23 @@ if (WITH_UNIT_TESTS)
 	include(CTest)
 	add_subdirectory(ut)
 endif(WITH_UNIT_TESTS)
+
+# add a target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+	if(DOT)
+		set(HAVE_DOT YES)
+	else(DOT)
+		set(HAVE_DOT NO)
+	endif(DOT)
+	configure_file(
+		${json_SOURCE_DIR}/Doxyfile.in ${json_BINARY_DIR}/Doxyfile
+		@ONLY}
+	)
+	add_custom_target(
+		doc ALL
+		${DOXYGEN_EXECUTABLE} ${json_BINARY_DIR}/Doxyfile
+		WORKING_DIRECTORY ${json_BINARY_DIR}
+		COMMENT "Generating API documentation with Doxygen" VERBATIM
+	)
+endif(DOXYGEN_FOUND)
