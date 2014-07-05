@@ -1,8 +1,11 @@
+#include <fstream>
+
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/CompilerOutputter.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
 #include <cppunit/TestRunner.h>
+#include <cppunit/XmlOutputter.h>
 
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -22,8 +25,12 @@ int main()
 
 	runner.run(controller);
 
-	CppUnit::CompilerOutputter outputter(&result, std::cerr);
-	outputter.write(); 
+    CppUnit::CompilerOutputter consoleOutputter(&result, std::cerr);
+    consoleOutputter.write(); 
+
+    std::ofstream ofile ("testresults.xml");
+    CppUnit::XmlOutputter xmlOutputter(&result, ofile);
+    xmlOutputter.write(); 
 
 	return not result.wasSuccessful();
 }
