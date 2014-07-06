@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
 	set(
 		CMAKE_BUILD_TYPE Release
 		CACHE STRING
-		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel Coverage."
 		FORCE
 )
 endif()
@@ -21,6 +21,20 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
+
+string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
+if(BUILD_TYPE_LOWER STREQUAL "coverage")
+	# workaround necessary because CHECK_CXX_COMPILER_FLAG not only compiles, but also links,
+	# but while linking, it does not specify the flag, which in this case must also be present
+	# in the linker invocation. Without setting the flag here manually, the macro would fail
+	# while linking.
+	set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_COVERAGE} -coverage")
+	CHECK_CXX_COMPILER_FLAG("" COMPILER_SUPPORTS_COVERAGE)
+	if(NOT COMPILER_SUPPORTS_COVERAGE)
+		message(FATAL_ERROR "Your compiler does not support compiling for code coverage")
+	endif()
+endif()
+
 
 find_package(BISON REQUIRED)
 set(BISON_OUTPUT ${json_BINARY_DIR}/json.tab.cc)
