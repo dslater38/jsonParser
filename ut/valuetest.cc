@@ -24,6 +24,9 @@ class ValueTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(testBoolTrue);
     CPPUNIT_TEST(testBoolFalse);
 
+    CPPUNIT_TEST(testStringFromCharacterArray);
+    CPPUNIT_TEST(testStringFromStl);
+
 	CPPUNIT_TEST_SUITE_END();
     
     void testLongLongInt();
@@ -41,6 +44,9 @@ class ValueTest : public CPPUNIT_NS::TestFixture
 
     void testBoolTrue();
     void testBoolFalse();
+
+    void testStringFromCharacterArray();
+    void testStringFromStl();
     
 };
 
@@ -126,5 +132,19 @@ void ValueTest::testBoolFalse()
     const JSON::Value v { false };
     CPPUNIT_ASSERT(not v);
     CPPUNIT_ASSERT(not v.as_bool());
+}
+
+void ValueTest::testStringFromCharacterArray()
+{
+    const char* content { "json++" };
+    const JSON::Value v { content };
+    CPPUNIT_ASSERT_EQUAL(std::string{content}, v.as_string());
+}
+
+void ValueTest::testStringFromStl()
+{
+    const std::string content { "json++" };
+    const JSON::Value v { content };
+    CPPUNIT_ASSERT_EQUAL(content, v.as_string());
 }
 

@@ -9,12 +9,14 @@ class ParseFileTest : public CPPUNIT_NS::TestFixture
 {
 	CPPUNIT_TEST_SUITE(ParseFileTest);
 
+    CPPUNIT_TEST(testString);
 	CPPUNIT_TEST(testNumber);
     CPPUNIT_TEST(testBool);
     CPPUNIT_TEST(testNull);
 
 	CPPUNIT_TEST_SUITE_END();
     
+    void testString();
     void testNumber();
     void testBool();
     void testNull();
@@ -22,6 +24,18 @@ class ParseFileTest : public CPPUNIT_NS::TestFixture
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ParseFileTest);
+
+void ParseFileTest::testString()
+{
+    const std::string fileName { std::string{UT_JSON_PATH} + "string.json" };
+
+    const JSON::Value v { parse_file(fileName.c_str()) };
+
+    CPPUNIT_ASSERT_EQUAL(std::string{}, v["empty"].as_string());
+    CPPUNIT_ASSERT_EQUAL(std::string{"c"}, v["one char"].as_string());
+    CPPUNIT_ASSERT_EQUAL(std::string{"a lot of characters"}, v["chars"].as_string());
+    CPPUNIT_ASSERT_EQUAL(std::string{"\u00D6\u00F6"}, v["unicode"].as_string());
+}
 
 void ParseFileTest::testNumber()
 {
