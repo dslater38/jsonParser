@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 
 project(json)
 
-set(CMAKE_CXX_FLAGS "-O3")
+if(NOT CMAKE_BUILD_TYPE)
+	set(
+		CMAKE_BUILD_TYPE Release
+		CACHE STRING
+		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+		FORCE
+)
+endif()
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
