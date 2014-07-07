@@ -2,5 +2,6 @@
   "empty": "",
   "one char": "c", 
   "chars": "a lot of characters",
-  "unicode": "Öö"
+  "unicode": "Öö",
+  "escaped quotation mark": "europa\"great"
 }
