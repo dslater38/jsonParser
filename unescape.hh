@@ -28,6 +28,13 @@ namespace JSON {
         inline void unescape(std::string& s)
         {
             unescapeEscapeCharacter(s, "\\\"", "\"");
+            unescapeEscapeCharacter(s, "\\\\", "\\");
+            unescapeEscapeCharacter(s, "\\/", "/");
+            unescapeEscapeCharacter(s, "\\b", "\b");
+            unescapeEscapeCharacter(s, "\\f", "\f");
+            unescapeEscapeCharacter(s, "\\n", "\n");
+            unescapeEscapeCharacter(s, "\\r", "\r");
+            unescapeEscapeCharacter(s, "\\t", "\t");
         }
 
     }

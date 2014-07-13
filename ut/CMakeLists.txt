@@ -5,6 +5,7 @@ add_executable(
 	ut.json
 
 	unescapeescapecharactertest.cc
+	unescapejsonescapecharactertest.cc
 	valuetest.cc
 	parsefiletest.cc
 	testmain.cc
