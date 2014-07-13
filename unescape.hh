@@ -16,8 +16,10 @@ namespace JSON {
         inline void unescapeEscapeCharacter(
                 std::string& s, const char* const toReplace, const char* const ch)
         {
-            while(true) {
-                auto n = s.find(toReplace);
+            std::string::size_type n { };
+
+            while (true) {
+                n = s.find(toReplace, n);
                 if (n == std::string::npos) break;
                 s.replace(n, 2, ch);
             }
