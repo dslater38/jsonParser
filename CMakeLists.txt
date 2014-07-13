@@ -36,7 +36,7 @@ if(BUILD_TYPE_LOWER STREQUAL "coverage")
 endif()
 
 
-find_package(BISON REQUIRED)
+find_package(BISON 2.4 REQUIRED)
 set(BISON_OUTPUT ${json_BINARY_DIR}/json.tab.cc)
 set(BISON_DEFINES ${json_BINARY_DIR}/json.tab.hh)
 include_directories(${json_SOURCE_DIR} ${json_BINARY_DIR})
