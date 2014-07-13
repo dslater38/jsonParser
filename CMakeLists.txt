@@ -63,6 +63,7 @@ if(FLEX_FOUND)
 		DEPENDS ${json_SOURCE_DIR}/json.l
 		COMMENT "Generating lex.yy.cc (lexer)"
 	)
+set_source_files_properties(${FLEX_OUTPUT} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-register")
 endif(FLEX_FOUND)
 
 add_library(json json_st.cc ${BISON_OUTPUT} ${FLEX_OUTPUT})
