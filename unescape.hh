@@ -1,3 +1,5 @@
+#include <codecvt>
+#include <locale>
 #include <string>
 
 namespace JSON {
@@ -22,6 +24,22 @@ namespace JSON {
                 n = s.find(toReplace, n);
                 if (n == std::string::npos) break;
                 s.replace(n, 2, ch);
+            }
+        }
+
+        //   \uFFFF -> unicode character UTF-8
+        inline void unescapeUnicodeEspaceSequence(std::string& s)
+        {
+            std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> multiByteConverter;
+
+            std::size_t n { };
+
+            while (true) {
+                n = s.find("\\u", n);
+                if (n == std::string::npos) break;
+                const std::string codePointStr { s.substr(n + 2, 4) };
+                const char16_t codePoint { static_cast<char16_t>(std::stoul(codePointStr, 0, 16)) };
+                s.replace(n, 6, multiByteConverter.to_bytes(codePoint));
             }
         }
 

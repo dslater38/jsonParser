@@ -6,6 +6,7 @@ add_executable(
 
 	unescapeescapecharactertest.cc
 	unescapejsonescapecharactertest.cc
+	unescapeunicodeescapesequencetest.cc
 	valuetest.cc
 	parsefiletest.cc
 	testmain.cc
