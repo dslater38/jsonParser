@@ -4,13 +4,19 @@ namespace JSON {
 
     namespace helper {
 
-        inline void unescape(std::string& s)
+        inline void unescapeEscapeCharacter(
+                std::string& s, const char* const toReplace, const char* const ch)
         {
             while(true) {
-                auto n = s.find("\\\""); // searches \"
+                auto n = s.find(toReplace);
                 if (n == std::string::npos) break;
-                s.replace(n, 2, "\""); // replaces with "
+                s.replace(n, 2, ch);
             }
+        }
+
+        inline void unescape(std::string& s)
+        {
+            unescapeEscapeCharacter(s, "\\\"", "\"");
         }
 
     }
