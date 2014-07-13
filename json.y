@@ -12,6 +12,9 @@
         int yylex();
     } 
         
+    using yy_size_t = size_t;
+    extern yy_size_t yyleng;
+        
     void * load_string(const char *);
     void load_file(FILE*);
     JSON::Value* parsd = nullptr;
@@ -80,8 +83,8 @@ value : NUMBER_I { $$ = new JSON::Value($1); }
 // String rule
 string : DOUBLE_QUOTED_STRING {
         // Trim string
-        std::string s($1);
-        s = s.substr(1, s.length()-2);
+        std::string s { $1 + 1, yyleng - 2 };
+
         while(true) {
             auto n = s.find("\\\""); // searches \"
             if (n == std::string::npos) break;
