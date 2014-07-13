@@ -4,6 +4,7 @@
     #include <cstring>
     #include <stdio.h>
     #include <stdexcept>
+    #include "unescape.hh"
     #include "json_st.hh"
     
     extern "C" 
@@ -85,11 +86,8 @@ string : DOUBLE_QUOTED_STRING {
         // Trim string
         std::string s { $1 + 1, yyleng - 2 };
 
-        while(true) {
-            auto n = s.find("\\\""); // searches \"
-            if (n == std::string::npos) break;
-            s.replace(n, 2, "\""); // replaces with "
-        }
+        JSON::helper::unescape(s);
+
         char* t = new char[s.length()+1];
         strcpy(t, s.c_str());
         $$ = t;
