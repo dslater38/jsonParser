@@ -7,10 +7,13 @@ JSON\+\+ is a **self contained** Flex/Bison JSON parser for C\+\+11. It parses s
 
 JSON++ is not a personal project anymore, people is constantly writing to me, and sending pull requests to improve it and make it better. I'd like to thank these people by adding them to this *Contributors* section (in order of contribution).
 
+* [Jakob Leben](https://bitbucket.org/jleben)
+* [Thomas Rinklin](https://bitbucket.org/t-ri)
 * [Luca Di Gaspero](https://bitbucket.org/ldigaspero)
 * [Helmuth Ploner](https://bitbucket.org/HelmuthPloner)
 
 Thanks for your effort fellas.
+
 ## Usage
 
 	#include <iostream>
