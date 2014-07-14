@@ -1,6 +1,6 @@
-#include <codecvt>
-#include <locale>
 #include <string>
+
+#include "ucs16toutf8.hh"
 
 namespace JSON {
 
@@ -30,8 +30,6 @@ namespace JSON {
         //   \uFFFF -> unicode character UTF-8
         inline void unescapeUnicodeEspaceSequence(std::string& s)
         {
-            std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> multiByteConverter;
-
             std::size_t n { };
 
             while (true) {
@@ -39,7 +37,7 @@ namespace JSON {
                 if (n == std::string::npos) break;
                 const std::string codePointStr { s.substr(n + 2, 4) };
                 const char16_t codePoint { static_cast<char16_t>(std::stoul(codePointStr, 0, 16)) };
-                s.replace(n, 6, multiByteConverter.to_bytes(codePoint));
+                s.replace(n, 6, ucs16toutf8(codePoint));
             }
         }
 
