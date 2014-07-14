@@ -13,8 +13,9 @@
     #include "json.tab.hh"
 %}
 
-JSONEscapeCharacter                     ["]
-JSONEscapeSequence                      {JSONEscapeCharacter}
+UnicodeEscapeSequence                   u[0-9A-Fa-f]{4}
+JSONEscapeCharacter                     ["\\/bfnrt]
+JSONEscapeSequence                      {JSONEscapeCharacter}|{UnicodeEscapeSequence}
 JSONStringCharacter                     [^"\\]|\\{JSONEscapeSequence}
 JSONString                              \"{JSONStringCharacter}*\"
 

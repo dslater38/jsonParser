@@ -34,8 +34,10 @@ void ParseFileTest::testString()
     CPPUNIT_ASSERT_EQUAL(std::string{}, v["empty"].as_string());
     CPPUNIT_ASSERT_EQUAL(std::string{"c"}, v["one char"].as_string());
     CPPUNIT_ASSERT_EQUAL(std::string{"a lot of characters"}, v["chars"].as_string());
-    CPPUNIT_ASSERT_EQUAL(std::string{"\u00D6\u00F6"}, v["unicode"].as_string());
-    CPPUNIT_ASSERT_EQUAL(std::string{"europa\"great"}, v["escaped quotation mark"].as_string());
+    CPPUNIT_ASSERT_EQUAL(std::string{u8"\u00D6\u00F6"}, v["unicode"].as_string());
+    CPPUNIT_ASSERT_EQUAL(
+            std::string{u8"\"\\/\b\f\n\r\tmit sch\u00F6nen Gr\u00FC\u00DFen aus \u00D6sterreich"},
+            v["all kinds of escapes"].as_string());
 }
 
 void ParseFileTest::testNumber()
