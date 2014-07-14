@@ -20,7 +20,7 @@ int main()
 	controller.addListener(&progress);      
 
     CppUnit::TestRunner runner;
-    CppUnit::TestFactoryRegistry& registry { CppUnit::TestFactoryRegistry::getRegistry() };
+    CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	runner.addTest(registry.makeTest());
 
 	runner.run(controller);
