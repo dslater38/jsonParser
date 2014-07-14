@@ -51,6 +51,8 @@ namespace JSON {
             unescapeEscapeCharacter(s, "\\n", "\n");
             unescapeEscapeCharacter(s, "\\r", "\r");
             unescapeEscapeCharacter(s, "\\t", "\t");
+
+            unescapeUnicodeEscapeSequence(s);
         }
 
     }
