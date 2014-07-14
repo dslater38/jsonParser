@@ -17,6 +17,8 @@ class UnescapeUnicodeEscapeSequenceTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(testHiragana);
     CPPUNIT_TEST(testCJK);
 
+    CPPUNIT_TEST(testIsPartOfUnescape);
+
     CPPUNIT_TEST_SUITE_END();
 
     void testBasicLatin();
@@ -27,6 +29,8 @@ class UnescapeUnicodeEscapeSequenceTest : public CPPUNIT_NS::TestFixture
     void testGreekExtended();
     void testHiragana();
     void testCJK();
+
+    void testIsPartOfUnescape();
 
 };
 
@@ -88,5 +92,12 @@ void UnescapeUnicodeEscapeSequenceTest::testCJK()
     std::string s { u8R"(\u4E0A\u4E0B)" };
     unescapeUnicodeEscapeSequence(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u4E0A\u4E0B"}, s);
+}
+
+void UnescapeUnicodeEscapeSequenceTest::testIsPartOfUnescape()
+{
+    std::string s { u8R"(Why do we fall, \u00A5\u00A3?)" };
+    JSON::helper::unescape(s);
+    CPPUNIT_ASSERT_EQUAL(std::string{u8"Why do we fall, \u00A5\u00A3?"}, s);
 }
 
