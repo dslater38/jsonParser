@@ -4,6 +4,7 @@ find_library(CPPUNIT_LIBRARY cppunit)
 add_executable(
 	ut.json
 
+	ucs16toutf8test.cc
 	unescapeescapecharactertest.cc
 	unescapejsonescapecharactertest.cc
 	unescapeunicodeescapesequencetest.cc
