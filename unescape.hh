@@ -28,7 +28,7 @@ namespace JSON {
         }
 
         //   \uFFFF -> unicode character UTF-8
-        inline void unescapeUnicodeEspaceSequence(std::string& s)
+        inline void unescapeUnicodeEscapeSequence(std::string& s)
         {
             std::size_t n { };
 
