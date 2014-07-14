@@ -24,6 +24,7 @@ namespace JSON {
                 n = s.find(toReplace, n);
                 if (n == std::string::npos) break;
                 s.replace(n, 2, ch);
+                ++n;
             }
         }
 

@@ -17,6 +17,8 @@ class UnescapeJsonEscapeCharacterTest : public CPPUNIT_NS::TestFixture
     CPPUNIT_TEST(testCarriageReturn);
     CPPUNIT_TEST(testHorizontalTab);
 
+    CPPUNIT_TEST(testReplacementIsPartOfAnotherEscape);
+
 	CPPUNIT_TEST_SUITE_END();
     
     void testQuotationMark();
@@ -27,6 +29,8 @@ class UnescapeJsonEscapeCharacterTest : public CPPUNIT_NS::TestFixture
     void testNewline();
     void testCarriageReturn();
     void testHorizontalTab();
+
+    void testReplacementIsPartOfAnotherEscape();
 
 };
 
@@ -88,5 +92,12 @@ void UnescapeJsonEscapeCharacterTest::testHorizontalTab()
     std::string s { R"(\t)" };
     unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{'\t'}, s);
+}
+
+void UnescapeJsonEscapeCharacterTest::testReplacementIsPartOfAnotherEscape()
+{
+    std::string s { R"(\\\/)" };
+    unescape(s);
+    CPPUNIT_ASSERT_EQUAL(std::string{"\\/"}, s);
 }
 
