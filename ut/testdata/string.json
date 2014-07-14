@@ -3,5 +3,6 @@
   "one char": "c", 
   "chars": "a lot of characters",
   "unicode": "Öö",
-  "escaped quotation mark": "europa\"great"
+  "JSON Escape Characters": "europa\"great",
+  "all kinds of escapes": "\"\\\/\b\f\n\r\tmit sch\u00F6nen Gr\u00FC\u00DFen aus \u00D6sterreich"
 }
