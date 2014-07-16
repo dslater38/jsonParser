@@ -26,7 +26,7 @@ namespace JSON {
          *
          * @return string containing at most 3 bytes representing the code point
          */
-        inline std::string codepoint2utf8(const char16_t codepoint)
+        inline std::string codePoint2utf8(const char16_t codepoint)
         {
             /*  (1)  */
             if (codepoint <= 0x007F) return { static_cast<char>(codepoint) };

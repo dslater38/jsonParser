@@ -6,11 +6,11 @@
 
 #include "codepoint2utf8.hh"
 
-using JSON::helper::codepoint2utf8;
+using JSON::helper::codePoint2utf8;
 
-class Ucs16ToUtf8Test : public CPPUNIT_NS::TestFixture
+class CodePoint2Utf8Test : public CPPUNIT_NS::TestFixture
 {
-	CPPUNIT_TEST_SUITE(Ucs16ToUtf8Test);
+	CPPUNIT_TEST_SUITE(CodePoint2Utf8Test);
 
     CPPUNIT_TEST(testConversion);
 
@@ -22,19 +22,19 @@ class Ucs16ToUtf8Test : public CPPUNIT_NS::TestFixture
 
         for (char16_t codePoint { 0x0000 }; codePoint <= 0xD7FF; ++codePoint) {
             CPPUNIT_ASSERT_EQUAL(
-                    stdMultiByteConverter.to_bytes(codePoint), codepoint2utf8(codePoint));
+                    stdMultiByteConverter.to_bytes(codePoint), codePoint2utf8(codePoint));
         }
 
         // skipping surrogates
 
         for (char16_t codePoint { 0xE000 }; codePoint <= 0xFFFFu; ++codePoint) {
             CPPUNIT_ASSERT_EQUAL(
-                    stdMultiByteConverter.to_bytes(codePoint), codepoint2utf8(codePoint));
+                    stdMultiByteConverter.to_bytes(codePoint), codePoint2utf8(codePoint));
             if (codePoint == 0xFFFF) break;
         }
     }
 
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(Ucs16ToUtf8Test);
+CPPUNIT_TEST_SUITE_REGISTRATION(CodePoint2Utf8Test);
 
