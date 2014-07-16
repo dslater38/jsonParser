@@ -38,6 +38,7 @@ void ParseFileTest::testString()
     CPPUNIT_ASSERT_EQUAL(
             std::string{u8"\"\\/\b\f\n\r\tmit sch\u00F6nen Gr\u00FC\u00DFen aus \u00D6sterreich"},
             v["all kinds of escapes"].as_string());
+    CPPUNIT_ASSERT_EQUAL(std::string{u8"\\u0065"}, v["unicode encoded backslash plus uXXXX"].as_string());
 }
 
 void ParseFileTest::testNumber()
