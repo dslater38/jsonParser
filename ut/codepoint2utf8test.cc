@@ -4,9 +4,9 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "ucs16toutf8.hh"
+#include "codepoint2utf8.hh"
 
-using JSON::helper::ucs16toutf8;
+using JSON::helper::codepoint2utf8;
 
 class Ucs16ToUtf8Test : public CPPUNIT_NS::TestFixture
 {
@@ -22,14 +22,14 @@ class Ucs16ToUtf8Test : public CPPUNIT_NS::TestFixture
 
         for (char16_t codePoint { 0x0000 }; codePoint <= 0xD7FF; ++codePoint) {
             CPPUNIT_ASSERT_EQUAL(
-                    stdMultiByteConverter.to_bytes(codePoint), ucs16toutf8(codePoint));
+                    stdMultiByteConverter.to_bytes(codePoint), codepoint2utf8(codePoint));
         }
 
         // skipping surrogates
 
         for (char16_t codePoint { 0xE000 }; codePoint <= 0xFFFFu; ++codePoint) {
             CPPUNIT_ASSERT_EQUAL(
-                    stdMultiByteConverter.to_bytes(codePoint), ucs16toutf8(codePoint));
+                    stdMultiByteConverter.to_bytes(codePoint), codepoint2utf8(codePoint));
             if (codePoint == 0xFFFF) break;
         }
     }

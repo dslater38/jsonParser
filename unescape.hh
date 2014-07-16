@@ -1,6 +1,6 @@
 #include <string>
 
-#include "ucs16toutf8.hh"
+#include "codepoint2utf8.hh"
 
 namespace JSON {
 
@@ -38,7 +38,7 @@ namespace JSON {
                 if (n == std::string::npos) break;
                 const std::string codePointStr { s.substr(n + 2, 4) };
                 const char16_t codePoint { static_cast<char16_t>(std::stoul(codePointStr, 0, 16)) };
-                s.replace(n, 6, ucs16toutf8(codePoint));
+                s.replace(n, 6, codepoint2utf8(codePoint));
                 ++n;
             }
         }
