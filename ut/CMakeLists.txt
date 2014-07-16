@@ -17,7 +17,7 @@ CHECK_CXX_SOURCE_COMPILES(
 	HAS_CODECVT_UTF8)
 
 if (HAS_CODECVT_UTF8)
-	set (TEST_SOURCES ${TEST_SOURCES} ucs16toutf8test.cc)
+	set (TEST_SOURCES ${TEST_SOURCES} codepoint2utf8test.cc)
 else()
 	message(STATUS "Not building test for UCS-16 to UTF-8 conversion")
 endif()
