@@ -31,21 +31,6 @@ namespace JSON {
             }
         }
 
-        //   \uFFFF -> unicode character UTF-8
-        inline void unescapeUnicodeEscapeSequence(std::string& s)
-        {
-            std::size_t n { };
-
-            while (true) {
-                n = s.find("\\u", n);
-                if (n == std::string::npos) break;
-                const std::string codePointStr { s.substr(n + 2, 4) };
-                const char16_t codePoint { static_cast<char16_t>(std::stoul(codePointStr, 0, 16)) };
-                s.replace(n, 6, codePoint2utf8(codePoint));
-                ++n;
-            }
-        }
-
         inline void unescape(std::string& s)
         {
             std::string result;
