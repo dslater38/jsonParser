@@ -2,7 +2,7 @@
 
 #include "unescape.hh"
 
-using JSON::helper::unescapeUnicodeEscapeSequence;
+using JSON::helper::unescape;
 
 class UnescapeUnicodeEscapeSequenceTest : public CPPUNIT_NS::TestFixture
 {
@@ -41,56 +41,56 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UnescapeUnicodeEscapeSequenceTest);
 void UnescapeUnicodeEscapeSequenceTest::testBasicLatin()
 {
     std::string s { u8R"(\u0041\u0042\u0043)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"ABC"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testLatin1Supplement()
 {
     std::string s { u8R"(\u00A5\u00A3)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u00A5\u00A3"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testLatinExtendedA()
 {
     std::string s { u8R"(\u0160\u0161)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u0160\u0161"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testMyanmar()
 {
     std::string s { u8R"(\u1042\u1043)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u1042\u1043"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testPhoneticExtensions()
 {
     std::string s { u8R"(\u1D19\u1D1A)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u1D19\u1D1A"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testGreekExtended()
 {
     std::string s { u8R"(\u1f63\u1f64)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u1f63\u1f64"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testHiragana()
 {
     std::string s { u8R"(\u3042\u3044\u3046\u3048\u304A)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u3042\u3044\u3046\u3048\u304A"}, s);
 }
 
 void UnescapeUnicodeEscapeSequenceTest::testCJK()
 {
     std::string s { u8R"(\u4E0A\u4E0B)" };
-    unescapeUnicodeEscapeSequence(s);
+    unescape(s);
     CPPUNIT_ASSERT_EQUAL(std::string{u8"\u4E0A\u4E0B"}, s);
 }
 
