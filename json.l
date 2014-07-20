@@ -38,9 +38,16 @@ null                                    { return NULL_T; }
 %%
 
 /** Sets the input string to the lexer */
-void load_string(const char* str)
+void * load_string(const char* str)
 {
-    yy_switch_to_buffer(yy_scan_string(str));
+    YY_BUFFER_STATE buffer_state = yy_scan_string(str);
+    yy_switch_to_buffer(buffer_state);
+    return buffer_state;
+}
+
+void clean_up(void *buffer_state)
+{
+    yy_delete_buffer(static_cast<YY_BUFFER_STATE>(buffer_state));
 }
 
 /** Sets the input file to the lexer */
