@@ -12,9 +12,10 @@
         int yylex();
     } 
         
-    void load_string(const char *);
+    void * load_string(const char *);
     void load_file(FILE*);
     JSON::Value* parsd = nullptr;
+    void clean_up(void * buffer_state);
 %}
 
 %code requires { #include "json_st.hh" }
@@ -180,19 +181,20 @@ JSON::Value parse_file(const char* filename)
 
 JSON::Value parse_string(const std::string& s)
 {
-    load_string(s.c_str());
+    void * buffer_state = load_string(s.c_str());
     
     int status = yyparse();
     
     if (status)
     {
-        throw std::runtime_error("Error parsing file: JSON syntax.");
+        throw std::runtime_error("Error parsing string: JSON syntax.");
         delete parsd;
     }
     else
     {
         JSON::Value v = *parsd;
         delete parsd;
+        if (buffer_state) clean_up(buffer_state);
         return v;    
     }
 }
