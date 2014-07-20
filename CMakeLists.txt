@@ -16,9 +16,9 @@ else()
 endif()
 
 find_package(BISON REQUIRED)
-set(BISON_OUTPUT ${json_SOURCE_DIR}/json.tab.cc)
-set(BISON_DEFINES ${json_SOURCE_DIR}/json.tab.hh)
-include_directories(${json_SOURCE_DIR})
+set(BISON_OUTPUT ${json_BINARY_DIR}/json.tab.cc)
+set(BISON_DEFINES ${json_BINARY_DIR}/json.tab.hh)
+include_directories(${json_SOURCE_DIR} ${json_BINARY_DIR})
 if(BISON_FOUND)
 	add_custom_command(
 		OUTPUT ${BISON_OUTPUT}
@@ -26,23 +26,25 @@ if(BISON_FOUND)
 			--defines=${BISON_DEFINES}
 			--output=${BISON_OUTPUT}
 			${json_SOURCE_DIR}/json.y
+		DEPENDS ${json_SOURCE_DIR}/json.y
 		COMMENT "Generating json.tab.hh, json.tab.cc (parser)"
 	)
 endif(BISON_FOUND)
 
 find_package(FLEX REQUIRED)
-set(FLEX_OUTPUT ${json_SOURCE_DIR}/lex.yy.cc)
+set(FLEX_OUTPUT ${json_BINARY_DIR}/lex.yy.cc)
 if(FLEX_FOUND)
 	add_custom_command(
 		OUTPUT ${FLEX_OUTPUT}
 		COMMAND ${FLEX_EXECUTABLE}
 			--outfile=${FLEX_OUTPUT}
 			${json_SOURCE_DIR}/json.l
+		DEPENDS ${json_SOURCE_DIR}/json.l
 		COMMENT "Generating lex.yy.cc (lexer)"
 	)
 endif(FLEX_FOUND)
 
-add_library(json json_st.cc json.tab.cc lex.yy.cc)
+add_library(json json_st.cc ${BISON_OUTPUT} ${FLEX_OUTPUT})
 add_executable(test test.cc)
 target_link_libraries(test json) 
 
