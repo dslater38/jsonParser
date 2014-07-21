@@ -1,9 +1,12 @@
+#ifndef JSON_HELPER_CODE_POINT_TO_UTF_8_HH
+#define JSON_HELPER_CODE_POINT_TO_UTF_8_HH
+
 #include <stdexcept>
 #include <string>
 
 namespace JSON {
 
-    namespace helper {
+    namespace HELPER {
 
         /**
          * @brief Convert 16 bit code point to UTF-8 string.
@@ -22,28 +25,31 @@ namespace JSON {
          * 87654321 87654321  |  87654321  |  87654321  |  87654321  |
          * -------------------|------------|------------|------------|
          *
-         * @param codepoint
+         * @param code_point
          *
          * @return string containing at most 3 bytes representing the code point
          */
-        inline std::string codePoint2utf8(const char16_t codepoint)
+        inline std::string code_point_to_utf8(const char16_t code_point)
         {
             /*  (1)  */
-            if (codepoint <= 0x007F) return { static_cast<char>(codepoint) };
+            if (code_point <= 0x007F) return { static_cast<char>(code_point) };
 
             /*  (2)  */
-            if (codepoint <= 0x07FF) {
-                const unsigned char firstByte = 0xC0 + ((codepoint & 0x07C0 ) >> 6);
-                const unsigned char secondByte = 0x80 + (codepoint & 0x003F);
-                return { static_cast<char>(firstByte), static_cast<char>(secondByte) };
+            if (code_point <= 0x07FF) {
+                const unsigned char first_byte = 0xC0 + ((code_point & 0x07C0 ) >> 6);
+                const unsigned char second_byte = 0x80 + (code_point & 0x003F);
+                return { static_cast<char>(first_byte), static_cast<char>(second_byte) };
             }
 
             /*  (3)  */
-            if (codepoint <= 0xFFFF) {
-                const unsigned char firstByte = 0xE0 + ((codepoint & 0xF000 ) >> 12);
-                const unsigned char secondByte = 0x80 + ((codepoint & 0x0FC0 ) >> 6);
-                const unsigned char thirdByte = 0x80 + (codepoint & 0x003F);
-                return { static_cast<char>(firstByte), static_cast<char>(secondByte), static_cast<char>(thirdByte) };
+            if (code_point <= 0xFFFF) {
+                const unsigned char first_byte = 0xE0 + ((code_point & 0xF000 ) >> 12);
+                const unsigned char second_byte = 0x80 + ((code_point & 0x0FC0 ) >> 6);
+                const unsigned char third_byte = 0x80 + (code_point & 0x003F);
+                return {
+                        static_cast<char>(first_byte),
+                        static_cast<char>(second_byte),
+                        static_cast<char>(third_byte) };
             }
 
             return { };  // can never happen
@@ -52,3 +58,5 @@ namespace JSON {
     }
 
 }
+
+#endif

@@ -4,11 +4,11 @@
 #include <stdexcept>
 #include <string>
 
-#include "codepoint2utf8.hh"
+#include "code_point_to_utf8.hh"
 
 namespace JSON {
 
-    namespace helper {
+    namespace HELPER {
 
         inline void unescape(std::string& s)
         {
@@ -28,10 +28,10 @@ namespace JSON {
                     case 't': result += '\t'; break;
                     case 'r': result += '\r'; break;
                     case 'u': {
-                            const std::string codePointStr { citer, citer + 4 };
-                            const char16_t codePoint {
-                                static_cast<char16_t>(std::stoul(codePointStr, 0, 16)) };
-                            result += codePoint2utf8(codePoint);
+                            const std::string code_point_str { citer, citer + 4 };
+                            const char16_t code_point {
+                                static_cast<char16_t>(std::stoul(code_point_str, 0, 16)) };
+                            result += code_point_to_utf8(code_point);
                             std::advance(citer, 4);
                             break;
                         }

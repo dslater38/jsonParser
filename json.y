@@ -86,7 +86,7 @@ string : DOUBLE_QUOTED_STRING {
         // Trim string
         std::string s { $1 + 1, yyleng - 2 };
 
-        JSON::helper::unescape(s);
+        JSON::HELPER::unescape(s);
 
         char* t = new char[s.length()+1];
         strcpy(t, s.c_str());
