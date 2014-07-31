@@ -12,7 +12,7 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-find_package(BISON 2.7 REQUIRED)
+find_package(BISON 2.4 REQUIRED)
 set(BISON_OUTPUT ${json_BINARY_DIR}/json.tab.cc)
 set(BISON_DEFINES ${json_BINARY_DIR}/json.tab.hh)
 include_directories(${json_SOURCE_DIR} ${json_BINARY_DIR})
