@@ -8,10 +8,13 @@ if(NOT CMAKE_BUILD_TYPE)
 		CACHE STRING
 		"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel Coverage."
 		FORCE
-)
+	)
 endif()
 
+set(CMAKE_CXX_FLAGS "-O3")
+
 include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
 if(COMPILER_SUPPORTS_CXX11)
@@ -43,7 +46,7 @@ include_directories(${json_SOURCE_DIR} ${json_BINARY_DIR})
 if(BISON_FOUND)
 	add_custom_command(
 		OUTPUT ${BISON_OUTPUT}
-		COMMAND ${BISON_EXECUTABLE} 
+		COMMAND ${BISON_EXECUTABLE}
 			--defines=${BISON_DEFINES}
 			--output=${BISON_OUTPUT}
 			${json_SOURCE_DIR}/json.y
@@ -52,7 +55,7 @@ if(BISON_FOUND)
 	)
 endif(BISON_FOUND)
 
-find_package(FLEX REQUIRED)
+find_package(FLEX 2.5 REQUIRED)
 set(FLEX_OUTPUT ${json_BINARY_DIR}/lex.yy.cc)
 if(FLEX_FOUND)
 	add_custom_command(
@@ -68,7 +71,7 @@ endif(FLEX_FOUND)
 
 add_library(json json_st.cc ${BISON_OUTPUT} ${FLEX_OUTPUT})
 add_executable(test test.cc)
-target_link_libraries(test json) 
+target_link_libraries(test json)
 
 
 option(WITH_UNIT_TESTS "build unit tests, requires cppunit framework")
