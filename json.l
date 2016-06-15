@@ -6,14 +6,20 @@
         int yylex();
     }
     
+#ifdef _MSC_VER
+#include <io.h>
+#define isatty _isatty
+#define fileno _fileno
+#endif
+
     // Needed for the tokens
     #include "json.tab.hh"
 %}
 
 %%
 
-\"[^\"]*\"                              { yylval.string_v = yytext; return DOUBLE_QUOTED_STRING; }
-\'[^\']*\'                              { yylval.string_v = yytext; return SINGLE_QUOTED_STRING; }
+\"[^\"]*\"                              { new (&(yylval.string_v)) std::string{yytext}; return DOUBLE_QUOTED_STRING; }
+\'[^\']*\'                              { new (&(yylval.string_v)) std::string{yytext}; return SINGLE_QUOTED_STRING; }
 "["                                     { return SQUARE_BRACKET_L; }
 "]"                                     { return SQUARE_BRACKET_R; }
 "{"                                     { return CURLY_BRACKET_L; }

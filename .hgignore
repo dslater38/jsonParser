@@ -1,2 +1,14 @@
+syntax:glob
+
 .DS_Store
 .git
+x64
+Win32
+*.vsp
+*.VC.*
+*.exe
+*.pdb
+*.ilk
+*.suo
+*.vspx
+*.psess
