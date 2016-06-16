@@ -52,7 +52,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\..\json.l" />
-    <CustomBuild Include="..\..\..\json.y" />
+    <Bison Include="..\..\..\json.y" />
+  </ItemGroup>
+  <ItemGroup>
+    <Flex Include="..\..\..\json.l" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@
     <ClCompile Include="..\..\..\Value.cc" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\..\json.l">
+    <Flex Include="..\..\..\json.l">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">(cd %(RelativeDir) &amp; d:\MinGW\msys\1.0\bin\flex.exe -olex.yy.cc json.l)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDIr)lex.yy.cc;%(Outputs)</Outputs>
@@ -44,8 +44,16 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDIr)lex.yy.cc;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">(cd %(RelativeDir) &amp; d:\MinGW\msys\1.0\bin\flex.exe -olex.yy.cc json.l)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RelativeDIr)lex.yy.cc;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\json.y">
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
+      <Cpp Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</Cpp>
+      <Cpp Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</Cpp>
+      <Cpp Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</Cpp>
+      <Cpp Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</Cpp>
+    </Flex>
+    <Bison Include="..\..\..\json.y">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">(cd $(SolutionDir)..\..\ &amp;  d:\MinGW\msys\1.0\bin\bison.exe --defines=json.tab.hh --output=json.tab.cc json.y)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">(cd $(SolutionDir)..\..\ &amp;  d:\MinGW\msys\1.0\bin\bison.exe --defines=json.tab.hh --output=json.tab.cc json.y)</Command>
@@ -55,7 +63,15 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)json.tab.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)json.tab.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RelativeDir)json.tab.cc;%(Outputs)</Outputs>
-    </CustomBuild>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\%(Filename).tab.cc</OutputFile>
+      <DefinesFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\%(Filename).tab.hh</DefinesFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\%(Filename).tab.cc</OutputFile>
+      <DefinesFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\%(Filename).tab.hh</DefinesFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\%(Filename).tab.cc</OutputFile>
+      <DefinesFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\%(Filename).tab.hh</DefinesFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\%(Filename).tab.cc</OutputFile>
+      <DefinesFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\%(Filename).tab.hh</DefinesFile>
+    </Bison>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9B6360C-B37A-422E-B7DA-2A860FD01E48}</ProjectGuid>
@@ -92,6 +108,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\..\..\usr\local\win_flex\custom_build_rules\win_flex_bison_custom_build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -116,14 +133,19 @@
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,8 +157,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,7 +174,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +192,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zo %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,5 +204,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\..\..\usr\local\win_flex\custom_build_rules\win_flex_bison_custom_build.targets" />
   </ImportGroup>
 </Project>
