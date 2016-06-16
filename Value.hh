@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 #include <stack>
+#include <cassert>
 
 #include "ValueType.hh"
 #include "Object.hh"
@@ -30,7 +31,7 @@ namespace JSON
 		Value(Value&& v);
 
 		/** Constructor from int. */
-		explicit Value(const long long int i);
+		explicit Value(const int64_t i);
 
 		/** Constructor from int. */
 		explicit Value(const long int i);
@@ -59,13 +60,23 @@ namespace JSON
 		/** Constructor from Array. */
 		explicit Value(Array a);
 
+		/** Destructor */
+		~Value()noexcept;
+
 		/** Swap with another value */
 		void swap(Value &o)noexcept {
-			swapValue(*this, o, type_t);
-			if (o.type_t != type_t) {
-				swapValue(*this, o, o.type_t);
+			if (this != &o) {
+				if (type_t == o.type_t) {
+					swapValue(*this, o, type_t);
+				}
+				else {
+					auto t1{ std::move(o) };
+					o.~Value();
+					new (&o) Value{ std::move(*this) };
+					this->~Value();
+					new (this) Value{ std::move(t1) };
+				}
 			}
-			std::swap(type_t, o.type_t);
 		}
 
 		/** Type query. */
@@ -101,47 +112,55 @@ namespace JSON
 		}
 
 		/** Cast operator for float */
-		explicit operator long double() const { return float_v; }
+		explicit operator long double() const { return as_float(); }
 
 		/** Cast operator for int */
-		explicit operator long long int() const { return int_v; }
+		explicit operator int64_t() const { return as_int(); }
 
 		/** Cast operator for bool */
-		explicit operator bool() const { return bool_v; }
+		explicit operator bool() const { return as_bool(); }
 
 		/** Cast operator for string */
-		explicit operator std::string() const { return string_v; }
+		explicit operator const std::string &() const { return as_string(); }
 
 		/** Cast operator for Object */
-		operator Object () const { return object_v; }
+		operator const Object &() const { return as_object(); }
 
-		/** Cast operator for Object */
-		operator Array () const { return array_v; }
+		/** Cast operator for Array */
+		operator const Array &() const { return as_array(); }
 
 		/** Cast operator for float */
-		long double as_float() const { return float_v; }
+		long double as_float() const { assert(type_t == ValueType::FLOAT); return float_v; }
 
 		/** Cast operator for int */
-		long long int as_int() const { return int_v; }
+		int64_t as_int() const { assert(type_t == ValueType::INT); return int_v; }
 
 		/** Cast operator for bool */
-		bool as_bool() const { return bool_v; }
+		bool as_bool() const { assert(type_t == ValueType::BOOL); return bool_v; }
 
 		/** Cast operator for string */
-		std::string as_string() const { return string_v; }
+		const std::string &as_string() const { assert(type_t == ValueType::STRING); return string_v; }
+
+		/** Cast operator for Array */
+		const Array &as_array()const { assert(type_t == ValueType::ARRAY); return array_v; }
+
+		/** Cast operator for Object */
+		const Object &as_object()const { assert(type_t == ValueType::OBJECT); return object_v; }
+
 	private:
 		static void swapValue(Value &a, Value &b, ValueType type)noexcept;
 
 	protected:
 
-		long double         float_v;
-		long long int       int_v;
-		bool                bool_v;
-		std::string         string_v;
+		union {
+			long double   float_v;
+			int64_t       int_v;
+			bool          bool_v;
+			std::string   string_v;
 
-		Object              object_v;
-		Array               array_v;
-
+			Object        object_v;
+			Array         array_v;
+		};
 		ValueType           type_t;
 	};
 
@@ -153,9 +172,9 @@ namespace JSON
 
 	inline Value::Value() : type_t(ValueType::NIL) { }
 
-	inline Value::Value(const long long int i) : int_v(i), type_t(ValueType::INT) { }
+	inline Value::Value(const int64_t i) : int_v(i), type_t(ValueType::INT) { }
 
-	inline Value::Value(const long int i) : int_v(static_cast<long long int>(i)), type_t(ValueType::INT) { }
+	inline Value::Value(const long int i) : int_v(static_cast<int64_t>(i)), type_t(ValueType::INT) { }
 
 	inline Value::Value(const int i) : int_v(static_cast<int>(i)), type_t(ValueType::INT) { }
 

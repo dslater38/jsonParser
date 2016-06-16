@@ -17,7 +17,7 @@ namespace JSON
 	array, a Perl or a C++ map (depending on the implementation). */
 	class Object
 	{
-		typedef std::unordered_map<std::string, Value> Map;
+		typedef std::unordered_map<const char *, Value> Map;
 	public:
 
 		class Val {
@@ -44,6 +44,13 @@ namespace JSON
 		/** Destructor. */
 		~Object() = default;
 
+
+		template<typename T, typename ...Targs >
+		Object(const char * key, T value, Targs&&...Fargs) {
+			assign(std::move(key), std::move(value), std::forward<Targs>(Fargs)...);
+		}
+
+
 		/** Swap */
 		void swap(Object &o)noexcept {
 			std::swap(_object, o._object);
@@ -59,13 +66,21 @@ namespace JSON
 		/** Subscript operator, access an element by key.
 		@param key key of the object to access
 		*/
-		Val operator[] (const std::string& key);
+		Val operator[] (const char *key);
+
+		Val operator[](const std::string &key) {
+			return operator[](key.c_str());
+		}
 
 		/** Subscript operator, access an element by key.
 		@param key key of the object to access
 		*/
-		const Value& operator[] (const std::string& key) const {
+		const Value& operator[] (const char *key) const {
 			return _object.at(key);
+		}
+
+		const Value& operator[] (const std::string &key) const {
+			return operator[](key.c_str());
 		}
 
 		/** Retrieves the starting iterator (const).
@@ -96,7 +111,7 @@ namespace JSON
 		@param v pair <key, value> to insert
 		@return an iterator to the inserted object
 		*/
-		std::pair<Map::iterator, bool> insert(std::pair<std::string, Value> v);
+		std::pair<Map::iterator, bool> insert(std::pair<const char *, Value> v);
 
 
 		template< class... Args >
@@ -108,6 +123,15 @@ namespace JSON
 		/** Size of the object. */
 		size_t size() const {
 			return _object.size();
+		}
+	private:
+		void assign() {}
+
+		template<typename T, typename ...Targs>
+		void
+			assign(const char * key, T v, Targs...Fargs) {
+			_object[key] = Value{ std::move(v) };
+			assign(std::forward<Targs>(Fargs)...);
 		}
 
 	protected:
@@ -145,11 +169,11 @@ namespace JSON {
 
 
 	inline
-		std::pair<Object::Map::iterator, bool> Object::insert(std::pair<std::string, Value> v) {
+		std::pair<Object::Map::iterator, bool> Object::insert(std::pair<const char *, Value> v) {
 		return _object.insert(std::move(v));
 	}
 
-	inline Object::Val Object::operator[] (const std::string& key) {
+	inline Object::Val Object::operator[] (const char *key) {
 		return Val(_object[key]);
 	}
 

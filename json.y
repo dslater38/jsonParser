@@ -102,10 +102,10 @@ string : DOUBLE_QUOTED_STRING {
 assignment_list: /* empty */ { new(&$$) JSON::Object{}; } 
     | string COLON value {
 		new(&$$) JSON::Object{};
-        $$.emplace(std::string($1), std::move($3));
+        $$.emplace($1.c_str(), std::move($3));
     } 
     | assignment_list COMMA string COLON value { 
-        $$.emplace(std::move($3), std::move($5));
+        $$.emplace($3.c_str(), std::move($5));
     }
     ;
     

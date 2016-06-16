@@ -1,11 +1,15 @@
 #ifndef JSON_ARRAY_H_
 #define JSON_ARRAY_H_
 #pragma once
-#include <iostream>
-#include <map>
-#include <unordered_map>
 #include <vector>
-#include <stack>
+#include  <initializer_list>
+
+#ifdef _MSC_VER
+#ifdef NDEBUG
+#pragma inline_recursion(on)
+#pragma inline_depth(255)
+#endif
+#endif
 
 namespace JSON
 {
@@ -32,6 +36,15 @@ namespace JSON
 		@param o the object to copy from
 		*/
 		Array(Array&& a) = default;
+
+		template<typename T, typename ...Targs >
+		Array(T value, Targs&&...Fargs) {
+			_array.reserve(sizeof...(Fargs));
+			assign(std::move(value), std::forward<Targs>(Fargs)...);
+		}
+
+		/** Initializer list constructor */
+		Array(const std::initializer_list<Value> &theList);
 
 		/** Swap.
 		@param o array to swap with
@@ -103,6 +116,22 @@ namespace JSON
 			return _array.size();
 		}
 
+		void reserve(size_t size) {
+			_array.reserve(size);
+		}
+
+	private:
+
+		void assign() {}
+
+		template<typename T, typename ...Targs>
+		void
+			assign(T value, Targs...Fargs) {
+			_array.emplace_back(std::move(value));
+			assign(std::forward<Targs>(Fargs)...);
+		}
+
+
 	protected:
 
 		/** Inner container. */
@@ -128,6 +157,7 @@ namespace std {
 		a.swap(b);
 	}
 }
+
 
 
 #endif // JSON_ARRAY_H_

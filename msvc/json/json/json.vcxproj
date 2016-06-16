@@ -48,10 +48,6 @@
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\lex.yy.cc</OutputFile>
-      <Cpp Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</Cpp>
-      <Cpp Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</Cpp>
-      <Cpp Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</Cpp>
-      <Cpp Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</Cpp>
     </Flex>
     <Bison Include="..\..\..\json.y">
       <FileType>Document</FileType>

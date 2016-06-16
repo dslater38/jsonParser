@@ -1,5 +1,6 @@
 #include "json_st.hh"
 #include <stdexcept>
+#include "json.tab.hh" // parser
 
 using namespace std;
 using namespace JSON;
@@ -17,15 +18,15 @@ ostream& operator<<(ostream& os, const Value& v)
     {
         /** Base types */
         case ValueType::INT:
-            os << (long long int)v;
+            os << v.as_int();
             break;
         
         case ValueType::FLOAT:
-            os << (long double)v;
+            os << v.as_float();
             break;
         
         case ValueType::BOOL:
-            os << ((bool)v ? "true" : "false");
+            os << (v.as_bool() ? "true" : "false");
             break;
         
         case ValueType::NIL:
@@ -33,16 +34,16 @@ ostream& operator<<(ostream& os, const Value& v)
             break;
         
         case ValueType::STRING:
-            os << '"' << ((string)v).c_str() << '"';                
+            os << '"' << v.as_string().c_str() << '"';                
             break;
         
         /** Compound types */
         case ValueType::ARRAY:
-            os << (Array)v;                
+            os << v.as_array();                
             break;
         
         case ValueType::OBJECT:
-            os << (Object)v;                
+            os << v.as_object();                
             break;
         
     }

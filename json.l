@@ -6,11 +6,11 @@
         int yylex();
     }
     
-#ifdef _MSC_VER
-#include <io.h>
-#define isatty _isatty
-#define fileno _fileno
-#endif
+//#ifdef _MSC_VER
+//#include <io.h>
+//#define isatty _isatty
+//#define fileno _fileno
+//#endif
 
     // Needed for the tokens
     #include "json.tab.hh"

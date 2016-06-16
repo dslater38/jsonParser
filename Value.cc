@@ -3,6 +3,29 @@
 
 namespace JSON {
 
+	/** Initializer list constructor */
+		Array::Array(const std::initializer_list<Value> &theList) {
+		_array.reserve(theList.size());
+		for (const auto &entry : theList) {
+			_array.emplace_back(entry);
+		}
+	}
+
+
+	Value::~Value()noexcept {
+		switch (type_t) {
+		case ValueType::STRING:
+			string_v.~basic_string();
+			break;
+		case ValueType::ARRAY:
+			array_v.~Array();
+			break;
+		case ValueType::OBJECT:
+			object_v.~Object();
+			break;
+		}
+	}
+
 	Value::Value(const Value& v)
 		: type_t(v.type_t)
 	{
@@ -25,16 +48,16 @@ namespace JSON {
 			break;
 
 		case ValueType::STRING:
-			string_v = v.string_v;
+			new (&string_v) std::string{ v.string_v };
 			break;
 
 			/** Compound types */
 		case ValueType::ARRAY:
-			array_v = v.array_v;
+			new (&array_v) Array{ v.array_v };
 			break;
 
 		case ValueType::OBJECT:
-			object_v = v.object_v;
+			new (&object_v) Object{ v.object_v };
 			break;
 		}
 	}
@@ -61,16 +84,16 @@ namespace JSON {
 			break;
 
 		case ValueType::STRING:
-			string_v = std::move(v.string_v);
+			new (&string_v) std::string{ std::move(v.string_v) };
 			break;
 
 			/** Compound types */
 		case ValueType::ARRAY:
-			array_v = std::move(v.array_v);
+			new (&array_v) Array{ std::move(v.array_v) };
 			break;
 
 		case ValueType::OBJECT:
-			object_v = std::move(v.object_v);
+			new (&object_v) Object{ std::move(v.object_v) } ;
 			break;
 		}
 	}

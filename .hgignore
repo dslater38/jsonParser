@@ -12,3 +12,4 @@ Win32
 *.suo
 *.vspx
 *.psess
+*.*.orig
