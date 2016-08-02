@@ -1,25 +1,46 @@
 %{
 
     #include <iostream>
+	#include <fstream>
+	#include <sstream>
     #include <cstring>
     #include <stdio.h>
     #include <stdexcept>
     #include "json_st.hh"
-    
+    #include "jsonLexer.hh"
+
+
     extern "C" 
     {
-        void yyerror(const char *);
-        int yylex();
+       // void yyerror(const char *);
+        int yylex(JSON::SemanticType *val,  JSON::Lexer *lexer);
     } 
         
-    void load_string(const char *);
-    void load_file(FILE*);
-    JSON::Value parsd{};
+  //  void load_string(const char *);
+   // void load_file(FILE*);
+  //   JSON::Value parsd{};
 %}
 
-%code requires { #include "json_st.hh" 
+%require "3.0"
 
-#   define YYCOPY(To, From, Count) memcpy (To, From, (Count) * sizeof (*(From)))
+/* make a re-entrant parser - fewer globals*/
+/* %pure_parser */
+/* %define api.pure full */
+%language "C++"
+/* %locations */
+/* %skeleton "glr.cc" */
+/* %glr-parser */
+
+%parse-param { JSON::Lexer *ptr }
+%lex-param { JSON::Lexer *ptr }
+
+%code requires { 
+
+#include "json_st.hh" 
+#include "SemanticType.hh"
+#include "jsonLexer.hh"
+// class FlexLexer;
+// #   define YYCOPY(To, From, Count) memcpy (To, From, (Count) * sizeof (*(From)))
 
 }
 
@@ -36,19 +57,19 @@
     JSON::Object object_p;
     JSON::Array array_p;
     JSON::Value value_p;
-	YYSTYPE() {memset(this,'\0',sizeof(YYSTYPE));}
-	~YYSTYPE(){}
-	YYSTYPE &operator=(const YYSTYPE &rhs){
-		memcpy(this, &rhs, sizeof(YYSTYPE));
+	semantic_type() {memset(this,'\0',sizeof(semantic_type));}
+	~semantic_type(){}
+	semantic_type &operator=(const semantic_type &rhs){
+		memcpy(this, &rhs, sizeof(semantic_type));
 		return *this;
 	}
 } 
 
 /** Define types for union values */
-%type<string_v> DOUBLE_QUOTED_STRING SINGLE_QUOTED_STRING string
-%type<int_v> NUMBER_I
-%type<float_v> NUMBER_F
-%type<bool_v> BOOLEAN
+%type<value> DOUBLE_QUOTED_STRING SINGLE_QUOTED_STRING string
+%type<value> NUMBER_I
+%type<value> NUMBER_F
+%type<value> BOOLEAN
     
 /** Declare tokens */
 %token COMMA COLON
@@ -59,60 +80,60 @@
 %token BOOLEAN
 %token NULL_T
 
-%type <object_p> object assignment_list
-%type <array_p> array list
-%type <value_p> value
+%type <value> object assignment_list
+%type <value> array list
+%type <value> value
 
 %start json
 
 %%
 
 // Entry point (every JSON file represents a value)
-json: value { parsd = std::move($1); } ;
+json: value { ptr->setParsd($1); } ;
 
 // Object rule
-object: CURLY_BRACKET_L assignment_list CURLY_BRACKET_R { new (&$$) JSON::Object{std::move($2)}; } ;
+object: CURLY_BRACKET_L assignment_list CURLY_BRACKET_R { $$ = std::move($2); } ;
 
 // Array rule
-array : SQUARE_BRACKET_L list SQUARE_BRACKET_R { new (&$$) JSON::Array{std::move($2)}; } ;
+array : SQUARE_BRACKET_L list SQUARE_BRACKET_R { $$ = std::move($2); } ;
 
 // Values rule
-value : NUMBER_I { new (&$$) JSON::Value{$1}; }
-    | NUMBER_F { new (&$$) JSON::Value{$1}; }
-    | BOOLEAN { new (&$$) JSON::Value{$1}; }
-    | NULL_T { new (&$$) JSON::Value{}; }
-    | string { new (&$$) JSON::Value{std::move($1)}; }
-    | object { new (&$$) JSON::Value{std::move($1)}; }
-    | array { new (&$$) JSON::Value{std::move($1)}; }
+value : NUMBER_I { $$ = std::move($1); }
+    | NUMBER_F { $$ = std::move($1); }
+    | BOOLEAN {$$ = std::move($1); }
+    | NULL_T { $$ = JSON::Value{}; }
+    | string { $$ = std::move($1); }
+    | object { $$ = std::move($1); }
+    | array { $$ = std::move($1); }
     ;
 
 // String rule
 string : DOUBLE_QUOTED_STRING {
         // Trim string
-        std::string s($1);
-        new(&$$) std::string{s.substr(1, s.length()-2)};
+        const auto &s = $1.as_string();
+        $$ = s.substr(1, s.length()-2);
     } 
     | SINGLE_QUOTED_STRING {
         // Trim string
-        std::string s($1);
-		new(&$$) std::string{s.substr(1, s.length()-2)};
+        const auto &s = $1.as_string();
+		$$ = s.substr(1, s.length()-2);
     };
 
 // Assignments rule
-assignment_list: /* empty */ { new(&$$) JSON::Object{}; } 
+assignment_list: /* empty */ { $$ = JSON::Object{}; } 
     | string COLON value {
-		new(&$$) JSON::Object{};
-        $$.emplace($1.c_str(), std::move($3));
+		$$ = JSON::Object{};
+		$$.emplace($1.as_string().c_str(), std::move($3));
     } 
     | assignment_list COMMA string COLON value { 
-        $$.emplace($3.c_str(), std::move($5));
+        $$.emplace($3.as_string().c_str(), std::move($5));
     }
     ;
     
 // List rule
-list: /* empty */ { new (&$$) JSON::Array{}; }
+list: /* empty */ { $$ = JSON::Array{}; }
     | value {
-        new (&$$) JSON::Array{};
+        $$ = JSON::Array{};
         $$.emplace_back(std::move($1));
     }
     | list COMMA value { 
@@ -141,7 +162,22 @@ private:
 };
 
 JSON::Value parse_file(const char* filename)
-{    
+{
+	using Lexer=JSON::Lexer;
+	auto stream = std::fstream{};
+	stream.open(filename);
+	if( stream.is_open() ){
+		Lexer lexer{};
+		lexer.switch_streams(&stream);
+		yy::parser p{&lexer};
+		auto status = p.parse();
+		if (status)
+			throw std::runtime_error("Error parsing file: JSON syntax.");
+
+		return std::move(reinterpret_cast<Lexer &&>(lexer).getParsd());
+	}
+	return JSON::Value{};
+/*
 	auto fh = FileHandle{filename};
     JSON::Value v;
     load_file(fh);
@@ -150,13 +186,27 @@ JSON::Value parse_file(const char* filename)
     if (status)
         throw std::runtime_error("Error parsing file: JSON syntax.");
 
-    return std::move(parsd);
+    return std::move( lexer.getParsd() ); // std::move(reinterpret_cast<Lexer &&>(lexer).getParsd());
+*/
 }
 
 JSON::Value parse_string(const std::string& s)
 {
-    load_string(s.c_str());
-    
+	using Lexer = JSON::Lexer;
+	auto stream = std::stringstream{s};
+	Lexer lexer{};
+	lexer.switch_streams(&stream);
+	yy::parser p{&lexer};
+	auto status = p.parse();
+    if (status)
+        throw std::runtime_error("Error parsing file: JSON syntax.");
+
+    return std::move( lexer.getParsd() );
+
+
+/*
+
+    load_string(lexer, s.c_str());
     int status = yyparse();
     
     if (status)
@@ -167,9 +217,20 @@ JSON::Value parse_string(const std::string& s)
     {
         return parsd;    
     }
+	*/
 }
 
-void yyerror(const char *s)
+void yy::parser::error(const std::string& msg)
 {
-    fprintf(stderr, "error: %s\n", s);
+    fprintf(stderr, "error: %s\n", msg.c_str());
+}
+
+int yylex(JSON::SemanticType *val,  JSON::Lexer *lexer)
+{
+	if( lexer ){
+		lexer->yylval = val;
+		return lexer->yylex();
+	}else {
+	return 0;
+	}
 }

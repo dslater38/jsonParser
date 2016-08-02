@@ -17,18 +17,8 @@ namespace JSON
 	array, a Perl or a C++ map (depending on the implementation). */
 	class Object
 	{
-		typedef std::unordered_map<const char *, Value> Map;
 	public:
-
-		class Val {
-		public:
-			explicit Val(Value &v_) : v(v_) {}
-
-			template<class T> void operator=(T rhs);
-
-		private:
-			Value &v;
-		};
+		typedef std::unordered_map<std::string, Value> Map;
 
 		/** Constructor. */
 		Object() = default;
@@ -39,22 +29,23 @@ namespace JSON
 		Object(const Object& o) = default;
 
 		/** Move constructor. */
-		Object(Object&& o) = default;
+		Object(Object&& o) noexcept;
 
 		/** Destructor. */
 		~Object() = default;
 
 
 		template<typename T, typename ...Targs >
-		Object(const char * key, T value, Targs&&...Fargs) {
-			assign(std::move(key), std::move(value), std::forward<Targs>(Fargs)...);
+		Object(const char * key, T value, Targs&&...Fargs)
+		: Object(std::forward<Targs>(Fargs)...){
+			//assign(std::move(key), std::move(value), std::forward<Targs>(Fargs)...);
+			_object.emplace(key, value);
 		}
 
 
 		/** Swap */
-		void swap(Object &o)noexcept {
-			std::swap(_object, o._object);
-		}
+		void swap(Object &o)noexcept;
+
 		/** Assignment operator.
 		@param o object to assign from
 		*/
@@ -66,35 +57,55 @@ namespace JSON
 		/** Subscript operator, access an element by key.
 		@param key key of the object to access
 		*/
-		Val operator[] (const char *key);
+		Value &operator[] (const char *key) {
+			return operator[](std::string{ key });
+		}
 
-		Val operator[](const std::string &key) {
-			return operator[](key.c_str());
+		Value &operator[](const std::string &key) {
+			return _object[key];
+		}
+
+		Value &operator[](const std::string &&key) {
+			return _object[std::move(key)];
 		}
 
 		/** Subscript operator, access an element by key.
 		@param key key of the object to access
 		*/
 		const Value& operator[] (const char *key) const {
-			return _object.at(key);
+			return operator[](std::string{ key });
 		}
 
 		const Value& operator[] (const std::string &key) const {
-			return operator[](key.c_str());
+			return _object.at(key);
 		}
 
-		/** Retrieves the starting iterator (const).
+		/** Retrieves the starting const_iterator (const).
 		@remark mainly for printing
 		*/
 		Map::const_iterator begin() const {
 			return _object.begin();
 		}
 
-		/** Retrieves the ending iterator (const).
+		/** Retrieves the ending const_iterator (const).
 		@remark mainly for printing
 		*/
 		Map::const_iterator end() const {
 			return _object.end();
+		}
+
+		/** Retrieves the starting const_iterator (const).
+		@remark mainly for printing
+		*/
+		Map::const_iterator cbegin() const {
+			return _object.cbegin();
+		}
+
+		/** Retrieves the ending const_iterator (const).
+		@remark mainly for printing
+		*/
+		Map::const_iterator cend() const {
+			return _object.cend();
 		}
 
 		/** Retrieves the starting iterator */
@@ -124,13 +135,18 @@ namespace JSON
 		size_t size() const {
 			return _object.size();
 		}
+
+		/** unparse this Object into a JSON string */
+		std::string toString()const;
+
 	private:
 		void assign() {}
 
 		template<typename T, typename ...Targs>
 		void
 			assign(const char * key, T v, Targs...Fargs) {
-			_object[key] = Value{ std::move(v) };
+			_object.emplace(key, std::move(v));
+			// _object[key] = Value{ std::move(v) };
 			assign(std::forward<Targs>(Fargs)...);
 		}
 
@@ -139,8 +155,13 @@ namespace JSON
 		/** Inner container. */
 		Map _object;
 	};
-	inline
-		void swap(Object &a, Object &b)noexcept {
+
+	inline Object::Object(Object &&o) noexcept
+		: _object(std::move(o._object)) {
+	}
+
+
+	inline void swap(Object &a, Object &b)noexcept {
 		a.swap(b);
 	}
 }
@@ -153,30 +174,11 @@ namespace std {
 	}
 }
 
+static_assert(std::is_nothrow_move_constructible<JSON::Object>::value, "Error: JSON::Object should be nothrow move constructible");
+static_assert(std::is_nothrow_destructible<JSON::Object>::value, "Error: JSON::Object should be nothrow destructible");
+static_assert(std::is_nothrow_move_assignable<JSON::Object>::value, "Error: JSON::Object should be nothrow move assignable");
 /** Output operator for Objects */
 std::ostream& operator<<(std::ostream&, const JSON::Object&);
 
-
-#include "Value.hh"
-
-namespace JSON {
-
-	template<class T>
-	inline
-		void Object::Val::operator=(T rhs) {
-		v = Value(std::move(rhs));
-	}
-
-
-	inline
-		std::pair<Object::Map::iterator, bool> Object::insert(std::pair<const char *, Value> v) {
-		return _object.insert(std::move(v));
-	}
-
-	inline Object::Val Object::operator[] (const char *key) {
-		return Val(_object[key]);
-	}
-
-}
 
 #endif // JSON_OBJECT_H_

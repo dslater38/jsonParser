@@ -50,13 +50,14 @@ namespace JSON
 		@param o array to swap with
 		*/
 		void swap(Array& o)noexcept {
-			std::swap(_array, o._array);
+			using std::swap;
+			swap(_array, o._array);
 		}
 
 		/** Assignment operator.
 		@param a array to copy from
 		*/
-		Array& operator=(Array a) {
+		Array& operator=(Array a)noexcept {
 			swap(a);
 			return *this;
 		}
@@ -64,7 +65,7 @@ namespace JSON
 		/** Subscript operator, access an element by index.
 		@param i index of the element to access
 		*/
-		Value& operator[] (size_t i) {
+		Value& operator[] (size_t i)noexcept {
 			return _array[i];
 		}
 
@@ -75,27 +76,41 @@ namespace JSON
 			return _array.at(i);
 		}
 
-		/** Retrieves the starting iterator (const).
+		/** Retrieves the starting const_iterator (const).
 		@remark mainly for printing
 		*/
-		std::vector<Value>::const_iterator begin() const {
+		std::vector<Value>::const_iterator begin() const noexcept {
 			return _array.begin();
 		}
 
-		/** Retrieves the ending iterator (const).
+		/** Retrieves the ending const_iterator (const).
 		@remark mainly for printing
 		*/
-		std::vector<Value>::const_iterator end() const {
+		std::vector<Value>::const_iterator end() const noexcept {
 			return _array.end();
 		}
 
+		/** Retrieves the starting const_iterator (const).
+		@remark mainly for printing
+		*/
+		std::vector<Value>::const_iterator cbegin() const noexcept {
+			return _array.cbegin();
+		}
+
+		/** Retrieves the ending const_iterator (const).
+		@remark mainly for printing
+		*/
+		std::vector<Value>::const_iterator cend() const noexcept {
+			return _array.cend();
+		}
+
 		/** Retrieves the starting iterator. */
-		std::vector<Value>::iterator begin() {
+		std::vector<Value>::iterator begin() noexcept {
 			return _array.begin();
 		}
 
 		/** Retrieves the ending iterator */
-		std::vector<Value>::iterator end() {
+		std::vector<Value>::iterator end() noexcept {
 			return _array.end();
 		}
 
@@ -120,6 +135,9 @@ namespace JSON
 			_array.reserve(size);
 		}
 
+		/** unparse this Array into a JSON string */
+		std::string toString()const;
+
 	private:
 
 		void assign() {}
@@ -139,10 +157,10 @@ namespace JSON
 
 	};
 
-	inline
-		void swap(Array &a, Array &b)noexcept {
+	inline void swap(Array &a, Array &b)noexcept {
 		a.swap(b);
 	}
+
 }
 
 
@@ -158,6 +176,8 @@ namespace std {
 	}
 }
 
-
+static_assert(std::is_nothrow_move_constructible<JSON::Array>::value, "Error: JSON::Array should be nothrow move constructible");
+static_assert(std::is_nothrow_destructible<JSON::Array>::value, "Error: JSON::Array should be nothrow destructible");
+static_assert(std::is_nothrow_move_assignable<JSON::Array>::value, "Error: JSON::Array should be nothrow move assignable");
 
 #endif // JSON_ARRAY_H_

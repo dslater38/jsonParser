@@ -54,7 +54,7 @@ ostream& operator<<(ostream& os, const Object& o)
 {    
     os << "{" << endl;
     ind++;
-    for (auto e = o.begin(); e != o.end();)
+    for (auto e = std::cbegin(o), ee=std::cend(o); e !=ee; )
     {
         JSON::indent(os);
 		os << '"';
@@ -64,7 +64,7 @@ ostream& operator<<(ostream& os, const Object& o)
 		os << ": ";
 		os << e->second;
         // os << '"' << e->first << '"' << ": " << e->second;
-        if (++e != o.end())
+        if (++e != ee)
             os << ",";
         os << endl;
     }    
@@ -79,11 +79,11 @@ ostream& operator<<(ostream& os, const Array& a)
 {
     os << "[" << endl;
     ind++;
-    for (auto e = a.begin(); e != a.end();)
+    for (auto e = std::cbegin(a), ee = std::cend(a); e != ee;)
     {
         JSON::indent(os);
         os << (*e);
-        if (++e != a.end())
+        if (++e != ee)
             os << ",";
         os << endl;
     }    

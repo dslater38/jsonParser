@@ -20,10 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Array.hh" />
+    <ClInclude Include="..\..\..\jLexer.hh" />
     <ClInclude Include="..\..\..\json.hh" />
     <ClInclude Include="..\..\..\json.tab.hh" />
+    <ClInclude Include="..\..\..\jsonLexer.hh" />
     <ClInclude Include="..\..\..\json_st.hh" />
     <ClInclude Include="..\..\..\Object.hh" />
+    <ClInclude Include="..\..\..\SemanticType.hh" />
     <ClInclude Include="..\..\..\Value.hh" />
     <ClInclude Include="..\..\..\ValueType.hh" />
   </ItemGroup>
@@ -68,6 +71,14 @@
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\%(Filename).tab.cc</OutputFile>
       <DefinesFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\%(Filename).tab.hh</DefinesFile>
     </Bison>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="json.natvis">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Natvis>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9B6360C-B37A-422E-B7DA-2A860FD01E48}</ProjectGuid>
@@ -139,9 +150,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>YYDEBUG=1;_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,10 +165,11 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>YYDEBUG=1;_CRT_SECURE_NO_WARNINGS=1;YY_NO_UNISTD_H=1;__STDC_VERSION__=199901L;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <EnablePREfast>false</EnablePREfast>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

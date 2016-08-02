@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="JSON::Value">
+   <DisplayString Condition="type_t==JSON::ValueType::INT">{{int={int_v}} }</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::FLOAT">{{float={float_v}} }</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::BOOL">{{bool={bool_v}} }</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::STRING">{{string={string_v}} }</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::NIL">&lt;null&gt;</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::OBJECT">{{object={object_v}} }</DisplayString>
+   <DisplayString Condition="type_t==JSON::ValueType::ARRAY">{{array={array_v}} }</DisplayString>
+   <Expand>
+      <Item Name="[int_v]" Condition="type_t==JSON::ValueType::INT">int_v</Item>
+      <Item Name="[float_v]" Condition="type_t==JSON::ValueType::FLOAT">float_v</Item>
+      <Item Name="[bool_v]" Condition="type_t==JSON::ValueType::BOOL">bool_v</Item>
+      <Item Name="[string_v]" Condition="type_t==JSON::ValueType::STRING">string_v</Item>
+      <Item Name="[nil_v]" Condition="type_t==JSON::ValueType::NIL">"null"</Item>
+      <Item Name="[object_v]" Condition="type_t==JSON::ValueType::OBJECT">object_v</Item>
+      <Item Name="[array_v]" Condition="type_t==JSON::ValueType::ARRAY">array_v</Item>
+   </Expand>
+   </Type>
+</AutoVisualizer>

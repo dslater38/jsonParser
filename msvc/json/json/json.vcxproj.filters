@@ -13,15 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\parser">
+      <UniqueIdentifier>{50b1eddd-38f5-4f4a-980d-42478c0f3768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser">
+      <UniqueIdentifier>{3b36c5cf-be0d-4f3c-aa4e-3f6865093a07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\json.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\json_st.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\json.tab.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Object.hh">
@@ -36,19 +39,31 @@
     <ClInclude Include="..\..\..\ValueType.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\SemanticType.hh">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\jsonLexer.hh">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\json.tab.hh">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\jLexer.hh">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\json_st.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\json.tab.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lex.yy.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Value.cc">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\json.tab.cc">
+      <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lex.yy.cc">
+      <Filter>Source Files\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,5 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Flex Include="..\..\..\json.l" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="json.natvis" />
   </ItemGroup>
 </Project>
